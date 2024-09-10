@@ -1,3 +1,5 @@
+import * as Dialog from "@radix-ui/react-dialog";
+
 import { Inter } from "next/font/google";
 import Image from "next/image";
 
@@ -5,24 +7,10 @@ import RocketseatLogo from "../assets/img/rocketseat-logo.svg"
 
 import styles from "../styles/Home.module.css"
 import Head from "next/head";
-import { useEffect, useRef, useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const modalRef = useRef(null)
-
-  function handleModalOpen() {
-    setIsModalOpen(true)
-  }
-
-  useEffect(() => {
-    if(isModalOpen) {
-      modalRef?.current?.focus()
-    }
-  }, [isModalOpen])
-
   return (
     <>
     <Head>
@@ -57,24 +45,24 @@ export default function Home() {
         </article>
       </main>
       <footer className={styles.footer}>
-        <a href="#" onClick={handleModalOpen} aria-controls="modal1">Termos de uso</a>
+        <Dialog.Root>
+          <Dialog.Trigger asChild>
+            <a href="#">Termos de uso</a>
+          </Dialog.Trigger>
+          <Dialog.Portal>
+            <Dialog.Overlay className={styles.overlay} />
+            <Dialog.Content className={styles.modal}>
+              <Dialog.Title>Termos de uso</Dialog.Title>
+              <Dialog.Description>Esses são os termos de uso</Dialog.Description>
+              <Dialog.Close asChild>
+                <button className={styles.closeModalButton}>
+                  Fechar
+                </button>
+              </Dialog.Close>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>
       </footer>
-
-      {/* Modal */}
-      {isModalOpen && (
-        <div
-          id="modal1" 
-          ref={modalRef} 
-          className={styles.modal} 
-          role="dialog" 
-          aria-labelledby="modal1Title" 
-          aria-describedby="modal1Description" 
-          tabIndex={-1}
-        >
-          <p id="modal1Title">Termos de uso</p>
-          <span id="modal1Description">Esses são os termos de uso</span>
-        </div>
-      )}
     </>
   );
 }
